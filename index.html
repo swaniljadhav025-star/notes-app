@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notes app - Download</title>
+<style>
+:root{--bg:#fff;--ink:#111;--mute:#6c6c70;--line:#e5e5ea;--acc:#d99a00;--accink:#fff;--fill:#f2f2f7}
+@media (prefers-color-scheme:dark){:root{--bg:#000;--ink:#f2f2f7;--mute:#8e8e93;--line:#2c2c2e;--acc:#ffd60a;--accink:#000;--fill:#1c1c1e}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans Devanagari",sans-serif}
+main{max-width:520px;margin:0 auto;padding:40px 22px 60px}
+h1{font-size:36px;margin:0 0 6px}
+p{margin:0 0 14px;color:var(--mute)}
+.btn{display:block;text-align:center;text-decoration:none;background:var(--acc);color:var(--accink);font-weight:700;font-size:19px;padding:16px;border-radius:14px;margin:22px 0}
+.btn:active{transform:scale(.98)}
+.card{background:var(--fill);border-radius:14px;padding:16px 18px;margin-top:16px}
+.card h2{font-size:17px;margin:0 0 8px}
+.card ol{margin:0;padding-left:20px;color:var(--mute)}
+.card li{margin:4px 0}
+small{color:var(--mute)}
+</style>
+</head>
+<body>
+<main>
+  <h1>📒 Notes</h1>
+  <p>Text notes and money notes with automatic balance. Your data is backed up to your own private GitHub repo and to your phone storage.</p>
+  <a class="btn" id="dl" href="#">⬇ Download APK</a>
+  <small id="ver"></small>
+  <div class="card">
+    <h2>Install on Android</h2>
+    <ol>
+      <li>Tap <b>Download APK</b> and open the file when it finishes.</li>
+      <li>If Android asks, allow <b>Install unknown apps</b> for your browser.</li>
+      <li>Tap <b>Install</b>, then open <b>Notes</b>.</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h2>Update the app</h2>
+    <ol><li>Download the APK again and install it over the old one. Your data stays.</li></ol>
+  </div>
+</main>
+<script>
+(function(){
+  var q=new URLSearchParams(location.search).get("repo"),owner,repo;
+  if(q&&q.indexOf("/")>0){owner=q.split("/")[0];repo=q.split("/")[1]}
+  else{owner=location.hostname.split(".")[0];repo=location.pathname.split("/").filter(Boolean)[0]||location.hostname}
+  var base="https://github.com/"+owner+"/"+repo;
+  document.getElementById("dl").href=base+"/releases/download/latest/notes.apk";
+  fetch("https://api.github.com/repos/"+owner+"/"+repo+"/releases/tags/latest").then(function(r){return r.ok?r.json():null}).then(function(j){
+    if(j&&j.published_at)document.getElementById("ver").textContent="Latest build: "+new Date(j.published_at).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
+  }).catch(function(){});
+})();
+</script>
+</body>
+</html>
